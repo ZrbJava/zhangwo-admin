@@ -1,0 +1,56 @@
+
+html,body {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    background:rgba(245,245,245,1);
+}
+
+ul{
+    margin:0;
+    list-style: none;
+    
+}
+.fl{
+    float:left;
+}
+.fr{
+    float:right;
+}
+.clearfix:after { 
+    content: "." ; 
+    display: block ;
+    height: 0 ;
+    line-height: 0;
+    clear: both ;
+    visibility: hidden ;
+}
+a{
+  text-decoration: none;  
+  display: block;
+}
+/* flex布局相关 */
+
+/* 水平等间隔分布 */
+.flex{
+    display: flex;  
+}
+.fsb{
+    display:flex;
+    justify-content: space-between;
+}
+/* 垂直水平居中 */
+.fvhc{
+    display:flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+}
+
+.mb10{
+    margin-bottom: 10px;
+}
+.mb6{
+    margin-bottom:6px;
+}
