@@ -5,6 +5,26 @@ import App from './App'
 import router from './router'
 import "normalize.css"
 import "../static/css/global.css"
+
+// 按需加载element
+import { Button, Select,Option,Row,Col,Table,TableColumn,Input,Switch,Pagination,Checkbox} from 'element-ui';
+
+Vue.use(Button)
+  .use(Row)
+  .use(Col)
+  .use(Table)
+  .use(TableColumn)
+  .use(Input)
+  .use(Select)
+  .use(Option)
+  .use(Switch)
+  .use(Pagination)
+  .use(Checkbox)
+
+   
+
+
+
 // import echarts from 'echarts'
 
 

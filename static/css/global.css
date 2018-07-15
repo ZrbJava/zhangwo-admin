@@ -31,10 +31,11 @@ a{
 }
 /* flex布局相关 */
 
-/* 水平等间隔分布 */
+
 .flex{
     display: flex;  
 }
+/* 水平等间隔分布 */
 .fsb{
     display:flex;
     justify-content: space-between;
@@ -43,14 +44,25 @@ a{
 .fvhc{
     display:flex;
     justify-content: center;
-    align-content: center;
     align-items: center;
-
 }
+/* 垂直居中 */
+.fvc{
+    display:flex;
+    align-items: center;
+}
+
 
 .mb10{
     margin-bottom: 10px;
 }
+.mb15{
+    margin-bottom:15px;
+}
 .mb6{
     margin-bottom:6px;
 }
+/* 路由切换的大视图容器 */
+/* .router-view-box{
+    background: ;
+} */
