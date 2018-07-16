@@ -29,9 +29,13 @@
 
 <style scoped lang='less'>
 .aside-left{
+    position: fixed;
+    left:0;
+    top:65px;
     box-sizing: border-box;
-    width:100%;
-    height:100%;
+    width:180px;
+    height:calc(100% - 50px);
+    overflow:hidden;
     background:rgba(246,246,246,1);
     box-shadow:0px 1px 0px 0px rgba(0,0,0,0.5);
 }

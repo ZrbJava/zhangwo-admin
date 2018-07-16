@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+   <keep-alive>
+      <router-view/>
+   </keep-alive>
   </div>
 </template>
 
@@ -13,5 +15,9 @@ export default {
 </script>
 
 <style>
+/* #app{
+  box-sizing:border-box;
+} */
 
+      
 </style>

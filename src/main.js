@@ -3,11 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
 import "normalize.css"
 import "../static/css/global.css"
 
+
+// axios.defaults.baseURL = "http://bin.dx2.me:7000/zhangwo/api/index.php/api/"
+Vue.prototype.$http = axios;
 // 按需加载element
-import { Button, Select,Option,Row,Col,Table,TableColumn,Input,Switch,Pagination,Checkbox} from 'element-ui';
+import { Button, Select,Option,Row,Col,Table,TableColumn,Input,Switch,Pagination,Checkbox,Loading,Dialog,} from 'element-ui';
 
 Vue.use(Button)
   .use(Row)
@@ -20,6 +24,9 @@ Vue.use(Button)
   .use(Switch)
   .use(Pagination)
   .use(Checkbox)
+  .use(Loading)
+  .use(Dialog)
+  // .use(MessageBox )
 
    
 

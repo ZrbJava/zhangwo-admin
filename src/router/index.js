@@ -8,6 +8,7 @@ import test from '@/views/test'
 import OrderManagement from "@/views/Trade/OrderManagement/OrderManagement"
 import Refund from "@/views/Trade/Refund/Refund"
 import TradeSetting from "@/views/Trade/TradeSetting/TradeSetting"
+import Login from "@/views/Login"
 
 
 // const homeChildren = [
@@ -28,6 +29,12 @@ export default new Router({
     {
       path: '/',
       redirect: '/Home'
+    },
+    {
+      name: 'Login',
+      path: '/Login',
+      component: Login,
+
     },
     {
       path: '/Home',

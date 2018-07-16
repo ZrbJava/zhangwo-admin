@@ -188,13 +188,17 @@ export default {
     return {
       asideList: [{ name: "欢迎页" }]
     };
+  },
+  created(){
+    this.$http.post("/api/index/index");
   }
 };
 </script>
 
 <style scoped lang='less'>
 .home {
-  height: calc(100% - 50px);
+  height: 100%;
+  padding-top:50px;
 }
 .container {
   height: 100%;
@@ -202,6 +206,7 @@ export default {
   padding-top: 15px;
   background: #f6f6f6;
   box-sizing: border-box;
+  overflow:auto;
   .aside-left-box {
     height: 100%;
     width: 180px;

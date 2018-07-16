@@ -9,7 +9,9 @@
             <!-- 右侧路由视窗 -->
             <div class="router-view-box">
                 <!-- 右边 -->
-                <router-view></router-view>
+                <keep-alive>
+                    <router-view></router-view>
+                </keep-alive>
             </div>
         </div>   
         
@@ -41,11 +43,14 @@
 <style scoped lang="less">
 .Trade{
     height:calc(100vh - 50px);
+    padding-top:50px;
+    // height: 100%;
+    // padding-left: 180px;
+
 }
 .container{
     height:100%;
     display: flex;
-    padding-top:15px;
     .aside-left-box{
         height:100%;
         width:180px;
@@ -55,8 +60,7 @@
     .router-view-box{
         flex:1;
         height:100%;
-        // width:100%;
-        background:blue;
+        overflow:auto;
     }
 }
 </style>

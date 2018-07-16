@@ -49,6 +49,7 @@
 <style scoped lang="less">
 .Trade{
     height:calc(100vh - 50px);
+    padding-top:50px;
 }
 .container{
     height:100%;
