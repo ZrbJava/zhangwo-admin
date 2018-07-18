@@ -5,7 +5,7 @@
             <!-- logo部分 -->
            <div class="logo-sec fvhc">
                <!-- logo部分左侧图片 -->
-               <img src="http://p1.music.126.net/chbx-2OXXzFrQvom50uQHA==/18646617697605552.jpg?param=40y40" alt="" class="logo-img">
+               <img src="../../assets/logo.png" alt="" class="logo-img">
 
                <!-- 右侧文字 -->
                <div class="logo-title">
@@ -22,17 +22,18 @@
         </section>
         <!-- 导航右侧 -->
         <section class="nav-right fvhc">
-            <span>惠明机械</span>
-            <img class="user-img" src="http://p1.music.126.net/chbx-2OXXzFrQvom50uQHA==/18646617697605552.jpg?param=40y40" alt="">
-            <div class="exit">
+            <span>{{userInfo.name}}</span>
+            <img class="user-img" :src="userInfo.company_logo" alt="">
+            <div class="exit" @click="loginOut">
               <img src="../../assets/home/exit.png" alt="">
-              <div @click="loginOut">退出</div>
+              <div>退出</div>
             </div>
         </section>
     </div>
 </template>
 
 <script>
+import {mapState} from "vuex"
 import { MessageBox } from 'element-ui';
 import { Message } from 'element-ui';
 export default {
@@ -52,29 +53,34 @@ export default {
     toggleNav(index) {},
     // 退出登陆
     loginOut() {
-      MessageBox.confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+  
+      MessageBox.confirm("确定退出登录?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           Message({
             type: "success",
-            message: "删除成功!"
+            message: "退出成功!",
+            duration:1000,
+            onClose:()=>{
+              console.log("退出成功");
+              this.$router.push({name:'Login'});
+            }
           });
+          
+          
         })
         .catch(() => {
-          Message({
-            type: "info",
-            message: "已取消删除"
-          });
         });
     }
   },
+  computed:{
+    ...mapState(['userInfo']),
+  },
   created() {
     console.log(this.currentNav);
-    console.log(MessageBox.message);
-    
   }
 };
 </script>
@@ -153,6 +159,7 @@ export default {
     }
     .exit {
       text-align: center;
+      cursor: pointer;
       img {
         padding-bottom: 5px;
       }

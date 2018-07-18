@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
+import store from "./store/store"
 import "normalize.css"
 import "../static/css/global.css"
 
@@ -11,7 +12,7 @@ import "../static/css/global.css"
 // axios.defaults.baseURL = "http://bin.dx2.me:7000/zhangwo/api/index.php/api/"
 Vue.prototype.$http = axios;
 // 按需加载element
-import { Button, Select,Option,Row,Col,Table,TableColumn,Input,Switch,Pagination,Checkbox,Loading,Dialog,} from 'element-ui';
+import { Button, Select,Option,Row,Col,Table,TableColumn,Input,Switch,Pagination,Checkbox,Loading,Dialog,Cascader} from 'element-ui';
 
 Vue.use(Button)
   .use(Row)
@@ -26,14 +27,7 @@ Vue.use(Button)
   .use(Checkbox)
   .use(Loading)
   .use(Dialog)
-  // .use(MessageBox )
-
-   
-
-
-
-// import echarts from 'echarts'
-
+  .use(Cascader)
 
 Vue.config.productionTip = false
 
@@ -41,6 +35,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

@@ -1,10 +1,8 @@
 <template>
     <div class=" shop" v-if="loading">  
          <div class="container">
-             <!-- 右侧路由视窗 -->
+            <!-- 右侧路由视窗 -->
             <div class="router-view-box">
-              <!-- 标题 -->
-               <div class="title mb15">订单详情-订单列表</div>
                <!-- 赛选条件 -->
                <div class="fillter">
                     <div class="fillters flex mb15">
@@ -53,23 +51,70 @@
               
               
             </div>
+          </div>
+            <!-- 会员价 -----模态框 -->
+            <el-dialog :visible.sync="DialogVisible" width="520px" top="0" center title="会员价">
+                <span>需要注意的是内容是默认不居中的</span>
+                <span slot="footer" class="dialog-footer">
+                    <span class="comfirm" @click="DialogVisible = false">确认提交</span>
+                </span>
+            </el-dialog>
+            <!-- 批量操作-模态框 -->
+             <el-dialog :visible.sync="isPLCZ" width="857px" top="0" title="批量改价">
+                <div class="plcz-content">
+                    <!-- 提醒 -->
+                    <div class="plcz-warn">
+                        <div>1.商家直接修改产品价格即可 </div>
+                        <div>2.渠道价不能高于零售价</div>
+                    </div>
+                    <!-- 表格 -->
+                    <el-table
+                        :data="list.goods"
+                        style="width: 100%">
+                        <el-table-column label="商品名称" width= '300'>
+                            
+                            <template slot-scope="scope">
+                                <div class="fvc" style="font-size:12px;line-height:16px">
+                                    <img class="shopImg" :src="scope.row.img_show" alt="" style="margin-right:10px;">
+                                        {{scope.row.title}}
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="零售价（元）" width= '210' align="center">
+                            <template slot-scope="scope">
+                                <!-- <span style="color:#333;font-size:14px">￥{{scope.row.nowprice}}</span>                                -->
+                                <input type="text" :value="scope.row.nowprice" class="plcz-price"> 
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="渠道价（元）"  align="center">
+                                <template slot-scope="scope">
+                                    <input type="text" :value="scope.row.placeprice" class="plcz-price" > 
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                        
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <span class="plcz-comfirm plcz-btn" @click="isPLCZ = false">确认</span>
+                    <span class="plcz-cancel plcz-btn" @click="isPLCZ = false">取消</span>
+                </div>
+            </el-dialog>
+
         </div>   
-    </div>
 </template>
 
 <script>
 import HeadNav from "@/components/HeadNav/HeadNav";
 import AsideLeft from "@/components/AsideLeft/AsideLeft";
 // import OrderList from "@/components/OrderList/OrderList";
-import Closed from "@/components/OrderList/Closed";//关闭
-import Delivered from "@/components/OrderList/Delivered";//已发货
-import Evaluated from "@/components/OrderList/Evaluated";//已评价
-import FullOrder from "@/components/OrderList/FullOrder";//全部订单
-import PendingDelivery from "@/components/OrderList/PendingDelivery";//待发货
-import PendingEvaluated from "@/components/OrderList/PendingEvaluated";//待评价
-import PendingPayment from "@/components/OrderList/PendingPayment";//待支付
-import SuccessfulTrade from "@/components/OrderList/SuccessfulTrade";//交易成功
-
+import Closed from "@/components/OrderList/Closed"; //关闭
+import Delivered from "@/components/OrderList/Delivered"; //已发货
+import Evaluated from "@/components/OrderList/Evaluated"; //已评价
+import FullOrder from "@/components/OrderList/FullOrder"; //全部订单
+import PendingDelivery from "@/components/OrderList/PendingDelivery"; //待发货
+import PendingEvaluated from "@/components/OrderList/PendingEvaluated"; //待评价
+import PendingPayment from "@/components/OrderList/PendingPayment"; //待支付
+import SuccessfulTrade from "@/components/OrderList/SuccessfulTrade"; //交易成功
 
 const OK = 1;
 export default {
@@ -83,25 +128,25 @@ export default {
     PendingDelivery,
     PendingEvaluated,
     PendingPayment,
-    SuccessfulTrade,
+    SuccessfulTrade
   },
   data() {
     return {
       loading: false,
       currentOrderNav: 0,
-      DialogVisible: false,//下架的弹框状态
+      DialogVisible: false, //下架的弹框状态
       keyWord: "",
-      name:"",
-      phone:"",
+      name: "",
+      phone: "",
       value1: true,
       value2: true,
       checked: "",
       multipleSelection: [],
-      isPLCZ:false,//暂时放这
+      isPLCZ: false, //暂时放这
       // 分页
-    //   currentPage: 4,
+      //   currentPage: 4,
 
-      currentView:"FullOrder"
+      currentView: "FullOrder"
     };
   },
   methods: {
@@ -112,11 +157,11 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-     orderNavTab(index,currentView) {
+    orderNavTab(index, currentView) {
       console.log(index);
       this.currentOrderNav = index;
       this.currentView = currentView;
-      console.log(this.currentOrderNav,this.currentView);
+      console.log(this.currentOrderNav, this.currentView);
     },
     // 搜索
     search() {
@@ -127,12 +172,12 @@ export default {
         background: "rgba(0, 0, 0, 0.7)"
       });
       var data = {
-        keywords: this.keyWord||"卡特",
+        keywords: this.keyWord || "卡特",
         page: 1,
         pagesize: 10
       };
 
-      this.$http.post("/api/goods/index", data).then(res => {
+      this.$http.post("/api/index/goodssearch", data).then(res => {
         if (res.data.status === OK) {
           console.log(res.data.data.list);
           this.list = res.data.data.list;
@@ -140,43 +185,42 @@ export default {
           loading.close();
         }
       });
-    },
+    }
   },
   created() {
-      this.search();
-  },
+    // this.search();
+  }
 };
 </script>
 <style lang="less">
 /* el重置样式 */
 .OrderManagement {
-    // 模态框
-    .el-dialog__headerbtn{
-        top:14px;
+  // 模态框
+  .el-dialog__headerbtn {
+    top: 14px;
+  }
+  .el-dialog__header {
+    text-align: left;
+    color: #1a191e;
+    font-weight: 600;
+    font-size: 16px;
+    background: rgba(249, 249, 249, 1);
+    height: 44px;
+    line-height: 44px;
+    padding: 0 0 0 20px;
+  }
 
-    }
-    .el-dialog__header{
-        text-align:left;
-        color:#1A191E;
-        font-weight: 600;
-        font-size:16px;
-        background:rgba(249,249,249,1);
-        height:44px;
-        line-height:44px;
-        padding:0 0 0 20px;
-    }
-   
-    // 垂直水平居中
-    .el-dialog{
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%,-50%);
-        background: #fff;
-    }
-    .el-dialog__body{
-        padding:0;
-    }
+  // 垂直水平居中
+  .el-dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+  }
+  .el-dialog__body {
+    padding: 0;
+  }
   .el-input {
     font-size: 12px;
   }
@@ -195,9 +239,9 @@ export default {
     width: 14px;
     height: 14px;
   }
-    .el-switch.is-checked .el-switch__core::after {
-        margin-left: -14px;
-    }
+  .el-switch.is-checked .el-switch__core::after {
+    margin-left: -14px;
+  }
   .el-table thead {
     font-size: 14px;
     color: #333;
@@ -221,13 +265,13 @@ export default {
 
 <style scoped lang="less">
 .shopImg {
-    width: 57px;
-    height: 57px;
+  width: 57px;
+  height: 57px;
 }
 .container {
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
   .aside-left-box {
     height: 100%;
     width: 180px;
@@ -296,7 +340,7 @@ export default {
     //   分页
     .pagination {
       height: 46px;
-      align-items:center;
+      align-items: center;
       line-height: 46px;
       overflow: hidden;
       position: relative;
@@ -304,18 +348,17 @@ export default {
     }
     // 批量操作
     .plcz {
-     padding-left:6px;
+      padding-left: 6px;
       width: 80px;
       height: 30px;
-      line-height:30px;
+      line-height: 30px;
       margin-left: 30px;
-      color: #1A191E;
+      color: #1a191e;
       font-size: 14px;
       background: #f5f5f5;
-      border:1px solid rgba(200,200,200,1);
+      border: 1px solid rgba(200, 200, 200, 1);
       cursor: pointer;
     }
-    
   }
 }
 // 订单导航
@@ -359,73 +402,73 @@ export default {
   }
 }
 //   模态框底部的slot样式
-.comfirm{
-    display:inline-block;
-    width:198px;
-    height:38px;
-    background:rgba(87,180,255,1);
-    border-radius:1px;
-    color:#fff;
-    line-height:38px;
-    font-size:14px;
-    cursor: pointer;
+.comfirm {
+  display: inline-block;
+  width: 198px;
+  height: 38px;
+  background: rgba(87, 180, 255, 1);
+  border-radius: 1px;
+  color: #fff;
+  line-height: 38px;
+  font-size: 14px;
+  cursor: pointer;
 }
 // 批量操作模态框slot脚部的样式
-.plcz-btn{
-    display:inline-block;
-    width:60px;
-    height:32px;
-    background:#B4B4B4;
-    font-size:13px;
-    text-align:center;
-    line-height:32px;
-    color:#333;
-    border-radius:2px;
-    border:1px solid rgba(180,180,180,1);
-    cursor: pointer;
+.plcz-btn {
+  display: inline-block;
+  width: 60px;
+  height: 32px;
+  background: #b4b4b4;
+  font-size: 13px;
+  text-align: center;
+  line-height: 32px;
+  color: #333;
+  border-radius: 2px;
+  border: 1px solid rgba(180, 180, 180, 1);
+  cursor: pointer;
 }
-.plcz-comfirm{
-    background:#F05B29;
-    color:#fff;
-    margin-right:8px;
-    border:none;
+.plcz-comfirm {
+  background: #f05b29;
+  color: #fff;
+  margin-right: 8px;
+  border: none;
 }
 // 模态框内容
-.plcz-warn{
-    margin-top:20px;
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    width:829px;
-    height:64px;
-    background:#D9EDF7;
-    font-size:12px;
-    color:#31708F;
-    line-height:64px;
-    padding-left: 10px;
-    margin-bottom:20px;
-    >div{
-        line-height:16px;
-    }
+.plcz-warn {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 829px;
+  height: 64px;
+  background: #d9edf7;
+  font-size: 12px;
+  color: #31708f;
+  line-height: 64px;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  > div {
+    line-height: 16px;
+  }
 }
 // 批量操作的内容样式
-.plcz-content{
-    width:100%;
-    height:388px;
-    overflow:auto;
-    box-sizing:border-box;
-    padding-left:15px;
-    overflow-x:hidden;
-    background:#fff;
-    .plcz-price{
-        width:79px;
-        height:28px;
-        line-height:28px;
-        text-align:center;
-        font-size:12px;
-        color:#333333;
-        outline:none;
-        border:1px solid #DDDDDD;
-    }
+.plcz-content {
+  width: 100%;
+  height: 388px;
+  overflow: auto;
+  box-sizing: border-box;
+  padding-left: 15px;
+  overflow-x: hidden;
+  background: #fff;
+  .plcz-price {
+    width: 79px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    font-size: 12px;
+    color: #333333;
+    outline: none;
+    border: 1px solid #dddddd;
+  }
 }
 </style>

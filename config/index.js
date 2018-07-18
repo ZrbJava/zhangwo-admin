@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://bin.dx2.me:7000/zhangwo/api/index.php/api/',
+        target: 'http://zw.palmar.cn/zwnew/shangjia/adminapi/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'   

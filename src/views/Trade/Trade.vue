@@ -42,25 +42,24 @@
 
 <style scoped lang="less">
 .Trade{
-    height:calc(100vh - 50px);
-    padding-top:50px;
-    // height: 100%;
-    // padding-left: 180px;
-
+    height: 100vh;
+    overflow: hidden;
 }
 .container{
-    height:100%;
+    width: 100%;
+    height: calc(100% - 65px);
+    padding-top: 65px;
     display: flex;
-    .aside-left-box{
-        height:100%;
-        width:180px;
-        margin-right:14px;
-       
+     .aside-left-box {
+        height: 100%;
+        width: 180px;
+        flex:none;
     }
     .router-view-box{
-        flex:1;
-        height:100%;
-        overflow:auto;
+        flex: 1;
+        box-sizing: border-box;
+        background: rgba(246, 246, 246, 1);
+        overflow: auto;
     }
 }
 </style>

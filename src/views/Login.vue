@@ -17,6 +17,7 @@
 </template>
 
 <script>
+    const OK = 1;
     export default {
         data(){
             return {
@@ -28,6 +29,20 @@
             login(){
                 console.log(this.userName,this.passWord);
             }
+        },
+         created() {
+             var obj = {
+                 username:this.userName||"huiming",
+                 password:this.passWord||123456,
+                 captcha:1234,
+             }
+            this.$http.post("/api/public/login",obj).then((res)=>{
+                if(res.status == OK){
+                    console.log(res.data);
+                    // this.HomeData = res.data
+                }
+            });
+            
         }
     }
 </script>

@@ -15,9 +15,7 @@ export default {
 </script>
 
 <style>
-/* #app{
-  box-sizing:border-box;
-} */
+
 
       
 </style>

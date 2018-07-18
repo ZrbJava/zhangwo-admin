@@ -1,8 +1,8 @@
 <template>
-    <div class="home">
-        <head-nav currentNav="0"></head-nav>        
-        <!-- 左侧导航部分 -->
-        <div class="container fsb">
+    <div class="home" v-if="loading">
+        <head-nav currentNav="0"></head-nav>       
+         <!-- 左侧导航部分 -->
+        <div class="container flex">
             <!-- 左侧导航 -->
             <div class="aside-left-box">
                 <aside-left class="aside-left" :asideList="asideList"></aside-left>
@@ -14,7 +14,7 @@
                 <div class="company-info">
                     <!-- 左边头像、设置 -->
                     <div class="left">
-                        <img src="https://cdn4.buysellads.net/uu/1/3386/1525189943-38523.png" alt="" class="avator">
+                        <img :src="HomeData.admin.img_logo" alt="" class="avator">
                         <div class="edit-box">
                             <img src="../assets/home/post.png" alt="" class="editIcon">
                             <span>编辑店铺设置</span>
@@ -23,11 +23,11 @@
                     <!-- 右边公司详情 -->
                     <div class="right">
                         <!-- 公司名称 -->
-                        <div class="company-name mb10">广州惠明机械有限公司</div>
+                        <div class="company-name mb10">{{HomeData.admin.title}}</div>
                         <!-- 用户名 -->
-                        <div class="userName mb6">用户名：<span style="color:#57B4FF">huiming</span></div>
+                        <div class="userName mb6">用户名：<span style="color:#57B4FF">{{HomeData.admin.user_login}}</span></div>
                         <!-- 上次修改时间 -->
-                        <div class="last-login-time">上次登录时间：<span style="color:#57B4FF">2018-06-27 09:19:36</span></div>
+                        <div class="last-login-time">上次登录时间：<span style="color:#57B4FF">{{HomeData.admin.last_login_time}}</span></div>
                     </div>
                 </div>
                 <!-- 订单信息 -->
@@ -38,7 +38,7 @@
                                 <img src="../assets/home/form.png" alt="">
                                 <div class="line"></div>
                                 <div class="orderNum">
-                                    <div class="num">738</div>
+                                    <div class="num">{{HomeData.today_order.total_order_num}}</div>
                                     <div>今日总订单数</div>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@
                                 <img src="../assets/home/money_bag.png" alt="">
                                 <div class="line"></div>
                                 <div class="orderNum">
-                                    <div class="num">831238</div>
+                                    <div class="num">{{HomeData.today_order.total_order_money}}</div>
                                     <div>今日下单总金额</div>
                                 </div>
                               </div>
@@ -58,7 +58,7 @@
                                 <img src="../assets/home/text.png" alt="">
                                 <div class="line"></div>
                                 <div class="orderNum">
-                                    <div class="num">7381231</div>
+                                    <div class="num">{{HomeData.today_order.total_pay_num}}</div>
                                     <div>今日已付款订单数</div>
                                 </div>
                               </div>
@@ -68,7 +68,7 @@
                                 <img src="../assets/home/sponsor.png" alt="">
                                 <div class="line"></div>
                                 <div class="orderNum">
-                                    <div class="num">738</div>
+                                    <div class="num">{{HomeData.today_order.total_pay_money}}</div>
                                     <div>今日已付款金额</div>
                                 </div>
                               </div>
@@ -84,8 +84,8 @@
                                <div class="item fvhc">
                                     <img src="../assets/home/icon1.png" alt="" class="icon">
                                     <div class="orderStatus">
-                                        <span class="orderNum">2</span>
-                                        <div>待发货订单数</div>
+                                        <span class="orderNum">{{HomeData.order_type[1]}}</span>
+                                        <div>待付款订单数</div>
                                     </div>
                                </div>
                             </div>
@@ -93,7 +93,7 @@
                                 <div class="item fvhc">
                                     <img src="../assets/home/icon2.png" alt="" class="icon">
                                     <div class="orderStatus">
-                                        <span class="orderNum">2</span>
+                                        <span class="orderNum">{{HomeData.order_type[2]}}</span>
                                         <div>待发货订单数</div>
                                     </div>
                                </div>
@@ -102,8 +102,8 @@
                                 <div class="item fvhc">
                                     <img src="../assets/home/icon3.png" alt="" class="icon">
                                     <div class="orderStatus">
-                                        <span class="orderNum">2</span>
-                                        <div>待发货订单数</div>
+                                        <span class="orderNum">{{HomeData.order_type[3]}}</span>
+                                        <div>已发货订单数</div>
                                     </div>
                                </div>
                             </div>
@@ -111,8 +111,8 @@
                                 <div class="item fvhc">
                                     <img src="../assets/home/icon4.png" alt="" class="icon">
                                     <div class="orderStatus">
-                                        <span class="orderNum">2</span>
-                                        <div>待发货订单数</div>
+                                        <span class="orderNum">{{HomeData.order_type[6]}}</span>
+                                        <div>退款中订单数</div>
                                     </div>
                                </div>
                             </div>
@@ -132,8 +132,8 @@
                                 <div class="item fvhc">
                                     <img src="../assets/home/icon5.png" alt="" class="icon">
                                     <div class="orderStatus">
-                                        <span class="orderNum">2</span>
-                                        <div>待发货订单数</div>
+                                        <span class="orderNum">{{HomeData.order_type[5]}}</span>
+                                        <div>待评价订单数</div>
                                     </div>
                                </div>
                             </div>
@@ -141,8 +141,8 @@
                                 <div class="item fvhc">
                                     <img src="../assets/home/icon6.png" alt="" class="icon">
                                     <div class="orderStatus">
-                                        <span class="orderNum">2</span>
-                                        <div>待发货订单数</div>
+                                        <span class="orderNum">{{HomeData.order_type[5]}}</span>
+                                        <div>已完成订单数</div>
                                     </div>
                                </div>
                             </div>
@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="fvhc">
                                     <img src="../assets/home/refund.png" alt="" style="margin-right:18px;">
-                                    <span>商品管理</span>
+                                    <span>订单管理</span>
                                 </div>
                             </div>
                             <div class="title">平台联系方式</div>
@@ -169,15 +169,124 @@
                </div>
             </div>
         </div>
+        <!-- <div class="box flex">
+          <div class="left">1</div>
+          <div class="right">2
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>1000</h1>
+            <h1>aldskf</h1>
+            <h1>aldskf</h1>
+          </div>
+        </div> -->
        
 
     </div>
 </template>
 
 <script>
+const OK = 1;
 import HeadNav from "@/components/HeadNav/HeadNav";
 import AsideLeft from "@/components/AsideLeft/AsideLeft";
 import Echart from "@/components/Echart/Echart";
+import {mapState,mapMutations} from "vuex";
 export default {
   components: {
     HeadNav,
@@ -186,40 +295,59 @@ export default {
   },
   data() {
     return {
-      asideList: [{ name: "欢迎页" }]
+      asideList: [{ name: "欢迎页" }],
+      loading:false
     };
   },
-  created(){
-    this.$http.post("/api/index/index");
-  }
+  methods:{
+    ...mapMutations(["setUserInfo"]),
+  },
+  computed:{
+    ...mapState(["userName","isLogin","company_logo"]),
+  },
+  created() {
+     const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+    this.$http.post("/api/index/index").then((res)=>{
+        if(res.data.status == OK){
+            console.log(res.data.data);
+            this.HomeData = res.data.data;
+            this.setUserInfo(res.data.data.login_info);
+            this.loading = true;
+            loading.close();
+        }
+    });
+  },
+ 
+  
 };
 </script>
-
 <style scoped lang='less'>
 .home {
-  height: 100%;
-  padding-top:50px;
+  // height: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 .container {
-  height: 100%;
-  display: flex;
-  padding-top: 15px;
-  background: #f6f6f6;
-  box-sizing: border-box;
-  overflow:auto;
+  width: 100%;
+  height: calc(100% - 65px);
+  padding-top: 65px;
   .aside-left-box {
     height: 100%;
     width: 180px;
-    margin-right: 14px;
-    flex: none;
+    flex:none;
   }
   // 路由视口大容器
   .router-view-box {
     flex: 1;
-    height: 100%;
+    margin-left:14px;
+    box-sizing: border-box;
     background: rgba(246, 246, 246, 1);
-    padding-right: 14px;
-    padding: 0 14px 17px 0;
+    overflow: auto;
     // 公司信息
     .company-info {
       position: relative;
@@ -379,9 +507,9 @@ export default {
       .operation-entrance {
         height: 304px;
         box-sizing: border-box;
-        overflow:hidden;
+        overflow: hidden;
         .title {
-          padding-left:10px;
+          padding-left: 10px;
           font-size: 15px;
           color: #333;
           height: 44px;
@@ -402,15 +530,15 @@ export default {
             height: 80px;
           }
         }
-        .bottom-sec{
-            font-size:12px;
-            color:#333333;
-            background: #fff;
-            height:100px;
-            padding-left:10px;
-            .phone{
-                padding: 10px 0;
-            }
+        .bottom-sec {
+          font-size: 12px;
+          color: #333333;
+          background: #fff;
+          height: 100px;
+          padding-left: 10px;
+          .phone {
+            padding: 10px 0;
+          }
         }
       }
     }

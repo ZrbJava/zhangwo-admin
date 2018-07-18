@@ -1,11 +1,11 @@
 <template>
     <div class="shop" v-if="loading">
         <head-nav currentNav="1"></head-nav>     
-         <div class="container">
+         <div class="container flex">
             <!-- 左侧导航 -->
-            <!-- <div class="aside-left-box"> -->
+            <div class="aside-left-box">
                 <aside-left class="aside-left" :asideList="asideList"></aside-left>
-            <!-- </div> -->
+            </div>
             <!-- 右侧路由视窗 -->
             <div class="router-view-box">
                 <!-- 标题 -->
@@ -28,14 +28,12 @@
                         <div class="product fvc">
                         分类:
                         <div class="input">
-                            <el-select v-model="classfiy" placeholder="请选择">
-                                <el-option
-                                v-for="item in classfiyOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
+                            <el-cascader
+                              placeholder="请选择,可搜索"
+                              :options="shopData.type"
+                              filterable
+                              change-on-select
+                            ></el-cascader>
                         </div>
                         </div>
                         <div class="product fvc">
@@ -43,10 +41,10 @@
                         <div class="input">
                             <el-select v-model="brandId" placeholder="请选择">
                                 <el-option
-                                v-for="item in brandOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in shopData.brand"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
@@ -71,10 +69,10 @@
                             <div class="input">
                                 <el-select v-model="shopStatus" placeholder="请选择">
                                     <el-option
-                                    v-for="item in brandOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
+                                    v-for="item in shopData.status"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -86,11 +84,11 @@
                     
                    </div>
                <!-- 商品列表 -->
-               <div class="title" style="border-bottom:none">商品列表<span style="color:#999;font-size:12px">（共{{list.count}}条记)</span></div>
+               <div class="title" style="border-bottom:none">商品列表<span style="color:#999;font-size:12px">（共{{shopData.list.cnt}}条记)</span></div>
                <div class="shop-table-list">
                  <el-table
                             ref="multipleTable"
-                            :data="list.goods"
+                            :data="shopData.list.goods"
                             style="width: 100%">
                             <el-table-column
                             type="selection"
@@ -147,7 +145,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="releaseTime"
+                            prop="addtime"
                             label="发布时间"
                             width = 100>
                             </el-table-column>
@@ -155,7 +153,7 @@
                             label="操作">
                                 <template slot-scope="scope">
                                   <div class="setting flex">
-                                    <div class="vipPrice" @click="DialogVisible = true">会员价</div>
+                                    <div class="vipPrice" @click="editPrice(scope.row.title,scope.row.nowprice,scope.row.placeprice)">会员价</div>
                                     <div class="cancel">下架</div>
                                   </div>
                                 </template>
@@ -174,7 +172,7 @@
                     :page-sizes="[10, 20]"
                     :page-size="100"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="Number(list.count)">
+                    :total="Number(shopData.list.cnt)">
                     </el-pagination>
                     <!-- {{}} -->
                 </div>
@@ -182,7 +180,24 @@
             </div>
             <!-- 会员价 -----模态框 -->
             <el-dialog :visible.sync="DialogVisible" width="520px" top="0" center title="会员价">
-                <span>需要注意的是内容是默认不居中的</span>
+                <div class="model-title fvc">
+                  <div class="shopName">
+                    商品名称
+                  </div>
+                 <div> {{title}} {{title}} {{title}}</div>
+                  </div>
+                <div class="vip-dialog-box">
+                  <div class="bdt bdl">零售价</div>
+                  <div class="bdt">渠道价</div>
+                </div>
+                <div class="vip-dialog-box">
+                   <div class="bdl">
+                     <input type="text" class="inp" v-model="nowprice">元
+                   </div>
+                   <div>
+                     <input type="text" class="inp" v-model="placeprice">元
+                   </div>
+                </div>
                 <span slot="footer" class="dialog-footer">
                     <span class="comfirm" @click="DialogVisible = false">确认提交</span>
                 </span>
@@ -197,7 +212,7 @@
                     </div>
                     <!-- 表格 -->
                     <el-table
-                        :data="list.goods"
+                        :data="shopData.list.goods"
                         style="width: 100%">
                         <el-table-column label="商品名称" width= '300'>
                             
@@ -244,7 +259,7 @@ export default {
   data() {
     return {
       loading: false,
-      DialogVisible: false,//下架的弹框状态
+      DialogVisible: false,
       isPLCZ:false,//批量操作状态
       asideList: [{ name: "商品管理" }],
       productId: "",
@@ -256,51 +271,205 @@ export default {
       value1: true,
       value2: true,
       checked: "",
-      //   赛选条件选项
-      classfiyOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      brandOptions: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
+      nowprice:"",//修改会员价-零售价
+      placeprice:"",//修改会员价-渠道价
+      title:"",//修改会员价-title
+      
+      options: [{
+          value: 'zhinan',
+          label: '指南',
+          children: [{
+            value: 'shejiyuanze',
+            label: '设计原则',
+            children: [{
+              value: 'yizhi',
+              label: '一致'
+            }, {
+              value: 'fankui',
+              label: '反馈'
+            }, {
+              value: 'xiaolv',
+              label: '效率'
+            }, {
+              value: 'kekong',
+              label: '可控'
+            }]
+          }, {
+            value: 'daohang',
+            label: '导航',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }]
+          }]
+        }, {
+          value: 'zujian',
+          label: '组件',
+          children: [{
+            value: 'basic',
+            label: 'Basic',
+            children: [{
+              value: 'layout',
+              label: 'Layout 布局'
+            }, {
+              value: 'color',
+              label: 'Color 色彩'
+            }, {
+              value: 'typography',
+              label: 'Typography 字体'
+            }, {
+              value: 'icon',
+              label: 'Icon 图标'
+            }, {
+              value: 'button',
+              label: 'Button 按钮'
+            }]
+          }, {
+            value: 'form',
+            label: 'Form',
+            children: [{
+              value: 'radio',
+              label: 'Radio 单选框'
+            }, {
+              value: 'checkbox',
+              label: 'Checkbox 多选框'
+            }, {
+              value: 'input',
+              label: 'Input 输入框'
+            }, {
+              value: 'input-number',
+              label: 'InputNumber 计数器'
+            }, {
+              value: 'select',
+              label: 'Select 选择器'
+            }, {
+              value: 'cascader',
+              label: 'Cascader 级联选择器'
+            }, {
+              value: 'switch',
+              label: 'Switch 开关'
+            }, {
+              value: 'slider',
+              label: 'Slider 滑块'
+            }, {
+              value: 'time-picker',
+              label: 'TimePicker 时间选择器'
+            }, {
+              value: 'date-picker',
+              label: 'DatePicker 日期选择器'
+            }, {
+              value: 'datetime-picker',
+              label: 'DateTimePicker 日期时间选择器'
+            }, {
+              value: 'upload',
+              label: 'Upload 上传'
+            }, {
+              value: 'rate',
+              label: 'Rate 评分'
+            }, {
+              value: 'form',
+              label: 'Form 表单'
+            }]
+          }, {
+            value: 'data',
+            label: 'Data',
+            children: [{
+              value: 'table',
+              label: 'Table 表格'
+            }, {
+              value: 'tag',
+              label: 'Tag 标签'
+            }, {
+              value: 'progress',
+              label: 'Progress 进度条'
+            }, {
+              value: 'tree',
+              label: 'Tree 树形控件'
+            }, {
+              value: 'pagination',
+              label: 'Pagination 分页'
+            }, {
+              value: 'badge',
+              label: 'Badge 标记'
+            }]
+          }, {
+            value: 'notice',
+            label: 'Notice',
+            children: [{
+              value: 'alert',
+              label: 'Alert 警告'
+            }, {
+              value: 'loading',
+              label: 'Loading 加载'
+            }, {
+              value: 'message',
+              label: 'Message 消息提示'
+            }, {
+              value: 'message-box',
+              label: 'MessageBox 弹框'
+            }, {
+              value: 'notification',
+              label: 'Notification 通知'
+            }]
+          }, {
+            value: 'navigation',
+            label: 'Navigation',
+            children: [{
+              value: 'menu',
+              label: 'NavMenu 导航菜单'
+            }, {
+              value: 'tabs',
+              label: 'Tabs 标签页'
+            }, {
+              value: 'breadcrumb',
+              label: 'Breadcrumb 面包屑'
+            }, {
+              value: 'dropdown',
+              label: 'Dropdown 下拉菜单'
+            }, {
+              value: 'steps',
+              label: 'Steps 步骤条'
+            }]
+          }, {
+            value: 'others',
+            label: 'Others',
+            children: [{
+              value: 'dialog',
+              label: 'Dialog 对话框'
+            }, {
+              value: 'tooltip',
+              label: 'Tooltip 文字提示'
+            }, {
+              value: 'popover',
+              label: 'Popover 弹出框'
+            }, {
+              value: 'card',
+              label: 'Card 卡片'
+            }, {
+              value: 'carousel',
+              label: 'Carousel 走马灯'
+            }, {
+              value: 'collapse',
+              label: 'Collapse 折叠面板'
+            }]
+          }]
+        }, {
+          value: 'ziyuan',
+          label: '资源',
+          children: [{
+            value: 'axure',
+            label: 'Axure Components'
+          }, {
+            value: 'sketch',
+            label: 'Sketch Templates'
+          }, {
+            value: 'jiaohu',
+            label: '组件交互文档'
+          }]
+        }],
       multipleSelection: [],
       // 分页
       currentPage: 4,
@@ -318,11 +487,6 @@ export default {
     },
     // 搜索
     search() {
-      console.log(
-
-        // "商品状态" + this.shopStatus,
-        // "适合机型" + this.model
-      ); //型号);
       const loading = this.$loading({
         lock: true,
         text: "Loading",
@@ -342,17 +506,31 @@ export default {
         pagesize: 10
       };
 
-      this.$http.post("/api/index/goodssearch", data).then(res => {
+      this.$http.post("/api/goods/index", data).then(res => {
         if (res.data.status === OK) {
           console.log(res.data.data.list);
-          this.list = res.data.data.list;
+          this.shopData = res.data.data;
+          this.shopData.type = res.data.data.type.map(item => {
+              return{
+                value: item.id,
+                label: item.name,
+                children: item.subset
+              }
+          });
           this.loading = true;
           loading.close();
         }
       });
     },
     // 重置
-    reset() {}
+    reset() {},
+    // 会员价
+    editPrice(title,nowprice,placeprice){
+      this.nowprice = nowprice;
+      this.placeprice = placeprice;
+      this.title = title
+      this.DialogVisible = true
+    }
   },
   created() {
       this.search();
@@ -437,28 +615,25 @@ export default {
     height: 57px;
 }
 .shop {
-  padding-top:50px;
-  height: 100%;
-  padding-left: 180px;
-}
-.aside-left-box {
-  padding-top: 15px;
+  height: 100vh;
+  overflow: hidden;
 }
 .container {
-    overflow:auto;
-    height: 100%;
     width: 100%;
-    box-sizing: border-box;
+    height: calc(100% - 65px);
+    padding-top: 65px;
+    background:#fff;
   .aside-left-box {
     height: 100%;
     width: 180px;
-    margin-right: 14px;
+    flex:none;
   }
   .router-view-box {
     flex: 1;
-    height: 100%;
-    background: #fff;
-    padding: 0 14px;
+    margin-left:14px;
+    box-sizing: border-box;
+    background: rgba(246, 246, 246, 1);
+    overflow: auto;
     .title {
       font-size: 16px;
       font-weight: 600;
@@ -633,5 +808,48 @@ export default {
         outline:none;
         border:1px solid #DDDDDD;
     }
+}
+// 会员价模态框
+ .model-title{
+    padding:10px 0 24px 20px;
+    color:#1A191E;
+    font-size:12px;
+    overflow-wrap: break-word;
+    .shopName{
+      width: 102px;
+      padding-right:32px;
+    }
+  }
+.vip-dialog-box{
+  display:flex;
+  justify-content: center;
+ 
+  >div{
+    width:150px;
+    height:40px;
+    font-size:12px;
+    color:#666;
+    line-height:40px;
+    text-align:center;
+    border-right:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+  }
+  .bdl{
+    border-left:1px solid #ccc;
+  }
+  .bdt{
+    border-top: 1px solid #ccc;
+  }
+ 
+  .inp{
+    width:60px;
+    height:21px;
+    outline:none;
+    border-radius:2px;
+    border:1px solid #E6E6E6;
+    text-align:center;
+    margin-right:8px;
+    color:#666666;
+  }
 }
 </style>
